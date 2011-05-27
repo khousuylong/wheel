@@ -1,0 +1,1 @@
+var YK = window.YK || {};

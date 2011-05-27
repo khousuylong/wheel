@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Reader Wheel</title>
+		<link rel="stylesheet" href="stylesheets/subSlideContainer.css" type="text/css" />
+		<script src="javascripts/yk.js"></script>
+		<script src="libs/yk_animator.js"></script>
+		<!--<script src="libs/yk_dom_builder.js"></script>-->
+		<!--<script src="javascripts/sub_slide_container.js"></script>-->
+		<style>
+			.myCanvase{
+				
+			}
+			.button_go{
+				background: red;
+				width: 50px;
+				height: 50px;
+				position: absolute;
+			}
+		</style>
+		<script>
+			function drawArc(context, options){
+				var centerX = options.centerX || 200;
+				var centerY = options.centerY || 200;
+				var radius = options.radius || 190;
+				var startingAngle = options.startingAngle || 0;
+				var endingAngle = options.endingAngle || 0;
+				var counterclockwise = options.counterclockwise || false;
+				context.beginPath();
+				context.moveTo( options.centerX, options.centerY );
+				context.arc(
+					options.centerX, 
+					options.centerY, 
+					options.radius, 
+					options.startingAngle * Math.PI, 
+					options.endingAngle * Math.PI, 
+					options.counterclockwise
+				);
+				context.lineTo( options.centerX, options.centerY );	
+				context.lineWidth = 2;
+				context.strokeStyle = "black"; 
+				context.stroke();
+				context.fillStyle = options.fillStyle;
+				context.fill();
+
+			};
+			function randomColor(){
+				var rgbColor = '';
+			  	for ( i = 1; i < 4; i++ ) {
+					rgbColor +=  Math.floor(Math.random() * (250+1));
+					if ( i != 3 ) rgbColor += ',';
+				 }
+				//window.status = rgbColor;
+		   		return "rgb("+rgbColor+")";
+			}
+		function init(){
+			 	canvas = document.getElementById("myCanvas");
+				var context = canvas.getContext("2d");
+				 
+				anvas = document.getElementById("myCanvas");
+			    var context = canvas.getContext("2d");
+				
+				for(var i = 0; i < 20; i++){
+					drawArc(context, {
+						'centerX': 200,
+						'centerY': 200,
+						'radius': 190,
+						'startingAngle': 0.1 * i,
+						'endingAngle': 0.1 * ( i + 1 ),
+						'counterclockwise': false,
+						'fillStyle': randomColor()
+					});
+				}
+
+			 	wheelContainer = document.getElementById("wheel_container");
+				
+				
+
+				var buttonGo = document.getElementById("button_go"), isGone = false;
+				buttonGo.onclick = function(){
+					var startDeg = Math.random()  + 300; 
+					var endDeg = Math.random()  + 4000;
+					YK.Animator.bindProperties(wheelContainer, 
+						{'MozTransform': 'rotate(' + startDeg + 'deg)'}, 
+						{'MozTransform': 'rotate(' + endDeg + 'deg)'}, 
+						'2s'	
+					);
+					if( !isGone ) {
+						YK.Animator.go(wheelContainer);
+						isGone = true; 
+					}else{
+						YK.Animator.back(wheelContainer);
+						isGone = false;
+					}
+				}
+
+				
+				<!--YK.Animator.go(wheelContainer);-->
+				<!---webkit-transform: rotate(-90deg); -->
+			}
+		</script>
+	</head>
+<body onload = "init();" >
+	<div id = "wheel_container" style="position: absolute">
+		<canvas id="myCanvas" class = "myCanvase" width="400" height="400">
+		</canvas>
+	</div>
+	<div class = "button_go" id = "button_go">
+	</div>
+</body>
+</html>
